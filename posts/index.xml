@@ -18,24 +18,10 @@
 &lt;p&gt;All SotA LLM agents today suffer from a lack of grounding. This might be an artifact of many things - autoregressive generation (which is bound to snowball errors as the generation length grows), the post-training recipe of these models which are primed towards being helpful (maybe at the expense of being correct?), generally nascent tool calling ability.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Anurag&#39;s Log</title>
-      <link>https://anuragprat1k.github.io/posts/welcome/</link>
-      <pubDate>Tue, 08 Apr 2025 16:10:54 -0400</pubDate>
-      <guid>https://anuragprat1k.github.io/posts/welcome/</guid>
-      <description>&lt;p&gt;Hi, I am Anurag. I am curious about understanding everything language can do for us.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>KL divergence</title>
-      <link>https://anuragprat1k.github.io/posts/kl-divergence/</link>
-      <pubDate>Tue, 08 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>https://anuragprat1k.github.io/posts/kl-divergence/</guid>
-      <description>A conceptual and mathematical deep dive into Kullback-Leibler divergence — intuition, derivation, and practical insights.</description>
-    </item>
-    <item>
       <title>LLMs in a nutshell</title>
-      <link>https://anuragprat1k.github.io/posts/llms/reasoning-llms/</link>
+      <link>https://anuragprat1k.github.io/posts/llms/</link>
       <pubDate>Thu, 21 Mar 2024 10:00:00 -0400</pubDate>
-      <guid>https://anuragprat1k.github.io/posts/llms/reasoning-llms/</guid>
+      <guid>https://anuragprat1k.github.io/posts/llms/</guid>
       <description>&lt;h3 id=&#34;llama-herd&#34;&gt;Llama Herd&lt;/h3&gt;
 &lt;h4 id=&#34;llama-4-april-25&#34;&gt;Llama 4, April &amp;lsquo;25&lt;/h4&gt;
 &lt;ul&gt;
@@ -189,30 +175,6 @@
 &lt;h3 id=&#34;olmo&#34;&gt;Olmo&lt;/h3&gt;
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
 &lt;p&gt;[Add your references here]&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>ML Essentials: A Practical Guide</title>
-      <link>https://anuragprat1k.github.io/posts/ml-essentials/</link>
-      <pubDate>Thu, 21 Mar 2024 10:00:00 -0400</pubDate>
-      <guid>https://anuragprat1k.github.io/posts/ml-essentials/</guid>
-      <description>&lt;h3 id=&#34;transformers&#34;&gt;Transformers&lt;/h3&gt;
-&lt;p&gt;RNNs
-h_t = tanh(W_h . h_{t-1} + W_x . x_t + b)
-y_t = softmax(h_t)
-suffer from vanishing / exploding gradients for long sequences&lt;/p&gt;
-&lt;p&gt;LSTM is a special type of RNN that fixes the short-term memory problem.
-has cell states and gates (forget, input and output gates)
-sequential - computation at time t depends on t-1, hence slow&lt;/p&gt;
-&lt;p&gt;Transformers - core mechanism is self-attention
-looks at all words together softmax(Q.K_t / sqrt(d_k)) . V
-needs positional encoding to encode positions&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Process Reward Models</title>
-      <link>https://anuragprat1k.github.io/posts/process-reward-models/</link>
-      <pubDate>Thu, 21 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://anuragprat1k.github.io/posts/process-reward-models/</guid>
-      <description>An exploration of process reward models - what they are, how they work, and their implications for AI alignment and learning from human feedback.</description>
     </item>
   </channel>
 </rss>
