@@ -18,9 +18,9 @@
 &lt;p&gt;All SotA LLM agents today suffer from a lack of grounding. This might be an artifact of many things - autoregressive generation (which is bound to snowball errors as the generation length grows), the post-training recipe of these models which are primed towards being helpful (maybe at the expense of being correct?), generally nascent tool calling ability.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>LLMs in a nutshell</title>
+      <title>LLMs in a hurry</title>
       <link>https://anuragprat1k.github.io/posts/llms/</link>
-      <pubDate>Thu, 21 Mar 2024 10:00:00 -0400</pubDate>
+      <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
       <guid>https://anuragprat1k.github.io/posts/llms/</guid>
       <description>&lt;h3 id=&#34;llama-herd&#34;&gt;Llama Herd&lt;/h3&gt;
 &lt;h4 id=&#34;llama-4-april-25&#34;&gt;Llama 4, April &amp;lsquo;25&lt;/h4&gt;
@@ -171,10 +171,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;deepseek-r1&#34;&gt;DeepSeek R1&lt;/h3&gt;
-&lt;h3 id=&#34;kimi-k15&#34;&gt;Kimi k1.5&lt;/h3&gt;
-&lt;h3 id=&#34;olmo&#34;&gt;Olmo&lt;/h3&gt;
-&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-&lt;p&gt;[Add your references here]&lt;/p&gt;</description>
+&lt;p&gt;TBD&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
