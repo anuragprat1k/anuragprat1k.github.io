@@ -1,14 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on A Research Log</title><link>https://anuragprat1k.github.io/posts/</link><description>Recent content in Posts on A Research Log</description><generator>Hugo -- 0.154.5</generator><language>en-us</language><lastBuildDate>Fri, 09 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://anuragprat1k.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Process Rewards: An Overview and Outlook</title><link>https://anuragprat1k.github.io/posts/process-rewards/</link><pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate><guid>https://anuragprat1k.github.io/posts/process-rewards/</guid><description>&lt;h2 id="1-introduction"&gt;1. Introduction&lt;/h2&gt;
-&lt;p&gt;Enhancing LLMs in complex domains requiring multi-step reasoning, logical consistency, and adherence to procedural constraints remains a critical research challenge. Process Reward Models (PRMs) offer the promise to address some of these limitations by providing fine-grained supervision signals throughout the model&amp;rsquo;s generation process, both at inference and training. They offer denser credit assignment than Outcome Reward Models (ORMs), but are hard to annotate and often ambiguous since characteristics of a good process vary by domain and difficulty of the problem at hand.&lt;/p&gt;</description></item><item><title>Research Directions</title><link>https://anuragprat1k.github.io/posts/research-vision-2025/</link><pubDate>Wed, 07 May 2025 00:00:00 +0000</pubDate><guid>https://anuragprat1k.github.io/posts/research-vision-2025/</guid><description>&lt;p&gt;A log of research directions I am curious about on the path to making useful agents and corresponding next steps.&lt;/p&gt;
-&lt;h3 id="grounding"&gt;Grounding&lt;/h3&gt;
-&lt;p&gt;All SotA LLM agents today suffer from a lack of grounding. This might be an artifact of many things - autoregressive generation (which is bound to snowball errors as the generation length grows), the post-training recipe of these models which are primed towards being helpful (maybe at the expense of being correct?), generally nascent tool calling ability.&lt;/p&gt;</description></item><item><title>LLMs in a hurry</title><link>https://anuragprat1k.github.io/posts/llms/</link><pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate><guid>https://anuragprat1k.github.io/posts/llms/</guid><description>&lt;h3 id="llama-herd"&gt;Llama Herd&lt;/h3&gt;
-&lt;h4 id="llama-4-april-25"&gt;Llama 4, April &amp;lsquo;25&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on A Research Log</title>
+    <link>https://anuragprat1k.github.io/posts/</link>
+    <description>Recent content in Posts on A Research Log</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 09 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://anuragprat1k.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Process Rewards: An Overview and Outlook</title>
+      <link>https://anuragprat1k.github.io/posts/process-rewards/</link>
+      <pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate>
+      <guid>https://anuragprat1k.github.io/posts/process-rewards/</guid>
+      <description>&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;
+&lt;p&gt;Enhancing LLMs in complex domains requiring multi-step reasoning, logical consistency, and adherence to procedural constraints remains a critical research challenge. Process Reward Models (PRMs) offer the promise to address some of these limitations by providing fine-grained supervision signals throughout the model&amp;rsquo;s generation process, both at inference and training. They offer denser credit assignment than Outcome Reward Models (ORMs), but are hard to annotate and often ambiguous since characteristics of a good process vary by domain and difficulty of the problem at hand.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Research Directions</title>
+      <link>https://anuragprat1k.github.io/posts/research-vision-2025/</link>
+      <pubDate>Wed, 07 May 2025 00:00:00 +0000</pubDate>
+      <guid>https://anuragprat1k.github.io/posts/research-vision-2025/</guid>
+      <description>&lt;p&gt;A log of research directions I am curious about on the path to making useful agents and corresponding next steps.&lt;/p&gt;
+&lt;h3 id=&#34;grounding&#34;&gt;Grounding&lt;/h3&gt;
+&lt;p&gt;All SotA LLM agents today suffer from a lack of grounding. This might be an artifact of many things - autoregressive generation (which is bound to snowball errors as the generation length grows), the post-training recipe of these models which are primed towards being helpful (maybe at the expense of being correct?), generally nascent tool calling ability.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>LLMs in a hurry</title>
+      <link>https://anuragprat1k.github.io/posts/llms/</link>
+      <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
+      <guid>https://anuragprat1k.github.io/posts/llms/</guid>
+      <description>&lt;h3 id=&#34;llama-herd&#34;&gt;Llama Herd&lt;/h3&gt;
+&lt;h4 id=&#34;llama-4-april-25&#34;&gt;Llama 4, April &amp;lsquo;25&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;Architecture
 &lt;ul&gt;
 &lt;li&gt;MoE, natively multimodal&lt;/li&gt;
-&lt;li&gt;uses interleaved attention layers &lt;a href="https://arxiv.org/abs/2305.19466"&gt;without position embeddings&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;employ &lt;a href="https://arxiv.org/pdf/2501.19399"&gt;inference time temperature scaling&lt;/a&gt; of attention to enhance length generation (called iRoPE)&lt;/li&gt;
+&lt;li&gt;uses interleaved attention layers &lt;a href=&#34;https://arxiv.org/abs/2305.19466&#34;&gt;without position embeddings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;employ &lt;a href=&#34;https://arxiv.org/pdf/2501.19399&#34;&gt;inference time temperature scaling&lt;/a&gt; of attention to enhance length generation (called iRoPE)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Params - Scout (17B active parameters with 16 experts, 10M context window), Maverick (17B active parameters with 128 experts), Behemoth (288B active parameters) still training. Scout can fit on a single H100 GPU (with Int4 quantization)&lt;/li&gt;
@@ -34,7 +63,7 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id="llama-3-july-24"&gt;Llama 3, July &amp;lsquo;24&lt;/h4&gt;
+&lt;h4 id=&#34;llama-3-july-24&#34;&gt;Llama 3, July &amp;lsquo;24&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;Architecture - Grouped-Query Attention (GQA)&lt;/li&gt;
 &lt;li&gt;Context Length - 128K tokens&lt;/li&gt;
@@ -52,39 +81,39 @@
 &lt;ul&gt;
 &lt;li&gt;public instruction datasets alongside 25 million synthetic examples&lt;/li&gt;
 &lt;li&gt;iterative finetuning&lt;/li&gt;
-&lt;li&gt;adopt &lt;a href="https://arxiv.org/abs/2309.06180"&gt;PagedAttention&lt;/a&gt; to increase efficieny of rejection sampling by 2x.&lt;/li&gt;
+&lt;li&gt;adopt &lt;a href=&#34;https://arxiv.org/abs/2309.06180&#34;&gt;PagedAttention&lt;/a&gt; to increase efficieny of rejection sampling by 2x.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="gemma-3-march-25"&gt;Gemma 3, March &amp;lsquo;25&lt;/h3&gt;
+&lt;h3 id=&#34;gemma-3-march-25&#34;&gt;Gemma 3, March &amp;lsquo;25&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Multimodal, long context, multilingual, trained with knowledge distillation&lt;/li&gt;
 &lt;li&gt;Architecture - GQA, interleaved local-global attention layers (in 5:1 ratio) to handle long context efficiently. Local layers operate over a shorter span (1024 tokens) while the global layers attend to the full context length. This helps reduce the memory footprint of Key-Value (KV) cache.
 &lt;ul&gt;
 &lt;li&gt;Vision
 &lt;ul&gt;
-&lt;li&gt;400M &lt;a href="https://arxiv.org/abs/2303.15343"&gt;SigLIP&lt;/a&gt; encoder which is a ViT trained with a variant of the CLIP loss. Takes as input square images resized to 896x896 and is finetuned on data from visual assitant tasks.&lt;/li&gt;
+&lt;li&gt;400M &lt;a href=&#34;https://arxiv.org/abs/2303.15343&#34;&gt;SigLIP&lt;/a&gt; encoder which is a ViT trained with a variant of the CLIP loss. Takes as input square images resized to 896x896 and is finetuned on data from visual assitant tasks.&lt;/li&gt;
 &lt;li&gt;Pan &amp;amp; Scan (P&amp;amp;S) - segments images into non-overlapping crops of equal size, covering the whole image, and then resize them to 896x896 pixes to pass to the encoder.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;Parameters - 4 sizes, 1B, 4B, 12B, 27B. 4B and above are multimodal.&lt;/li&gt;
-&lt;li&gt;Context length - 1B supports 32K tokens, others 128K tokens. The RoPE base frequency is &lt;a href="https://arxiv.org/abs/2306.15595"&gt;increased&lt;/a&gt; to 1 million for global attention layers while remaining at 10K for local layers.&lt;/li&gt;
+&lt;li&gt;Context length - 1B supports 32K tokens, others 128K tokens. The RoPE base frequency is &lt;a href=&#34;https://arxiv.org/abs/2306.15595&#34;&gt;increased&lt;/a&gt; to 1 million for global attention layers while remaining at 10K for local layers.&lt;/li&gt;
 &lt;li&gt;Tokenizer - same as Gemma 2, a SentencePiece tokenizer with split digits, preserved whitespace, and byte-level encodings with a vocab size of 262k entries.&lt;/li&gt;
 &lt;li&gt;Data - different for each size. 1B -&amp;gt; 2T tokens, 4B -&amp;gt; 4T, 12B -&amp;gt; 12T, 27B -&amp;gt; 14T&lt;/li&gt;
 &lt;li&gt;Training
 &lt;ul&gt;
 &lt;li&gt;Pre-training - uses TPU, uses knowledge distillation from larger, more capable models (presumably Gemini). Sample 256 logits per token, weighted by teacher probabilities, that the student learns via cross-entropy loss.&lt;/li&gt;
-&lt;li&gt;Post-training - Knowledge distillation from a large IT teacher, RL finetuning phase based on improved versions of &lt;a href="https://arxiv.org/abs/2407.14622"&gt;BOND&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/2401.12187"&gt;WARM&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/2406.16768"&gt;WARP&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Post-training - Knowledge distillation from a large IT teacher, RL finetuning phase based on improved versions of &lt;a href=&#34;https://arxiv.org/abs/2407.14622&#34;&gt;BOND&lt;/a&gt;, &lt;a href=&#34;https://arxiv.org/abs/2401.12187&#34;&gt;WARM&lt;/a&gt; and &lt;a href=&#34;https://arxiv.org/abs/2406.16768&#34;&gt;WARP&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;To train a small model, it is preferable to distill from a smaller teacher, possibly because the regularization effect of using a worse teacher surpasses the benefit of using a better teacher.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="alibaba-qwen"&gt;Alibaba Qwen&lt;/h3&gt;
-&lt;h4 id="qwen25-24"&gt;Qwen2.5, &amp;lsquo;24&lt;/h4&gt;
+&lt;h3 id=&#34;alibaba-qwen&#34;&gt;Alibaba Qwen&lt;/h3&gt;
+&lt;h4 id=&#34;qwen25-24&#34;&gt;Qwen2.5, &amp;lsquo;24&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;Architecture - GQA, RoPE, SwiGLU. Qwen2.5-1M uses a sparse attention mechanism to manage computational cost. Also supports MoE.&lt;/li&gt;
 &lt;li&gt;Context Length - 32K tokens. For 1 million tokens, they use training-free length extrapolation methods to scale models trained on 256k contexts up to 1M&lt;/li&gt;
@@ -103,7 +132,7 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id="qwen3-april-25"&gt;Qwen3, April &amp;lsquo;25&lt;/h4&gt;
+&lt;h4 id=&#34;qwen3-april-25&#34;&gt;Qwen3, April &amp;lsquo;25&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;36T tokens, using synthetic data from Qwen2.5-Math and Qwen2.5-Coder. Qwen3-4B can rival the performance of Qwen2.5-72B-Instruct.&lt;/li&gt;
 &lt;li&gt;Training
@@ -126,7 +155,7 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="deepseek-v3"&gt;DeepSeek v3&lt;/h3&gt;
+&lt;h3 id=&#34;deepseek-v3&#34;&gt;DeepSeek v3&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Architecture - heavy on MoE. DeepSeek-V3 (large MoE with 671B params) uses Multi-Head Latent Attention (MLA) to improve efficiency by compressing KV cache using low-rank projections.&lt;/li&gt;
 &lt;li&gt;Context Length - 128K tokens. Two-stage context length extension process after pre-training applied using YaRN method to first extend to 32K and then to 128K&lt;/li&gt;
@@ -149,5 +178,8 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id="deepseek-r1"&gt;DeepSeek R1&lt;/h3&gt;
-&lt;p&gt;TBD&lt;/p&gt;</description></item></channel></rss>
+&lt;h3 id=&#34;deepseek-r1&#34;&gt;DeepSeek R1&lt;/h3&gt;
+&lt;p&gt;TBD&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
