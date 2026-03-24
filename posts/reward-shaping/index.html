@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Reward Shaping in Reinforcement Learning | ap.grad</title>
 <meta name="keywords" content="RL, reward shaping">
 <meta name="description" content="Introduction
@@ -12,16 +12,16 @@ A fundamental challenge in reinforcement learning is specifying what we want an 
 The Problem: Sparse Rewards
 In many environments, the natural reward signal is sparse. A game of chess provides a $&#43;1$ or $-1$ only at the end; a robot learning to navigate receives reward only upon reaching the goal. With sparse rewards, the agent must rely on random exploration to stumble upon success before it can begin to learn — a process that scales poorly with the size of the state space.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/reward-shaping/">
+<link rel="canonical" href="https://anuragprat1k.github.io/posts/reward-shaping/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://anuragprat1k.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://anuragprat1k.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://anuragprat1k.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://anuragprat1k.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://anuragprat1k.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/reward-shaping/">
+<link rel="alternate" hreflang="en" href="https://anuragprat1k.github.io/posts/reward-shaping/">
 <noscript>
     <style>
         #theme-toggle,
@@ -99,13 +99,80 @@ In many environments, the natural reward signal is sparse. A game of chess provi
     width: 20px;
     height: 20px;
 }
-</style>
+</style><meta property="og:url" content="https://anuragprat1k.github.io/posts/reward-shaping/">
+  <meta property="og:site_name" content="ap.grad">
+  <meta property="og:title" content="Reward Shaping in Reinforcement Learning">
+  <meta property="og:description" content="Introduction A fundamental challenge in reinforcement learning is specifying what we want an agent to do. The reward function encodes this objective, but in practice, designing good reward functions is notoriously difficult. Reward shaping — the practice of modifying or augmenting the reward signal to accelerate learning — is one of the oldest and most important techniques for addressing this.
+The Problem: Sparse Rewards In many environments, the natural reward signal is sparse. A game of chess provides a $&#43;1$ or $-1$ only at the end; a robot learning to navigate receives reward only upon reaching the goal. With sparse rewards, the agent must rely on random exploration to stumble upon success before it can begin to learn — a process that scales poorly with the size of the state space.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-20T00:00:00+00:00">
+    <meta property="article:tag" content="RL">
+    <meta property="article:tag" content="Reward Shaping">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Reward Shaping in Reinforcement Learning">
+  <meta name="twitter:description" content="Introduction A fundamental challenge in reinforcement learning is specifying what we want an agent to do. The reward function encodes this objective, but in practice, designing good reward functions is notoriously difficult. Reward shaping — the practice of modifying or augmenting the reward signal to accelerate learning — is one of the oldest and most important techniques for addressing this.
+The Problem: Sparse Rewards In many environments, the natural reward signal is sparse. A game of chess provides a $&#43;1$ or $-1$ only at the end; a robot learning to navigate receives reward only upon reaching the goal. With sparse rewards, the agent must rely on random exploration to stumble upon success before it can begin to learn — a process that scales poorly with the size of the state space.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://anuragprat1k.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Reward Shaping in Reinforcement Learning",
+      "item": "https://anuragprat1k.github.io/posts/reward-shaping/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Reward Shaping in Reinforcement Learning",
+  "name": "Reward Shaping in Reinforcement Learning",
+  "description": "Introduction A fundamental challenge in reinforcement learning is specifying what we want an agent to do. The reward function encodes this objective, but in practice, designing good reward functions is notoriously difficult. Reward shaping — the practice of modifying or augmenting the reward signal to accelerate learning — is one of the oldest and most important techniques for addressing this.\nThe Problem: Sparse Rewards In many environments, the natural reward signal is sparse. A game of chess provides a $+1$ or $-1$ only at the end; a robot learning to navigate receives reward only upon reaching the goal. With sparse rewards, the agent must rely on random exploration to stumble upon success before it can begin to learn — a process that scales poorly with the size of the state space.\n",
+  "keywords": [
+    "RL", "reward shaping"
+  ],
+  "articleBody": "Introduction A fundamental challenge in reinforcement learning is specifying what we want an agent to do. The reward function encodes this objective, but in practice, designing good reward functions is notoriously difficult. Reward shaping — the practice of modifying or augmenting the reward signal to accelerate learning — is one of the oldest and most important techniques for addressing this.\nThe Problem: Sparse Rewards In many environments, the natural reward signal is sparse. A game of chess provides a $+1$ or $-1$ only at the end; a robot learning to navigate receives reward only upon reaching the goal. With sparse rewards, the agent must rely on random exploration to stumble upon success before it can begin to learn — a process that scales poorly with the size of the state space.\nPotential-Based Reward Shaping The seminal work by Ng, Harada, and Russell (1999) formalized reward shaping and established conditions under which it preserves the optimal policy.\nGiven a potential function $\\Phi: S \\rightarrow \\mathbb{R}$, the shaped reward is:\n$$F(s, a, s’) = \\gamma \\Phi(s’) - \\Phi(s)$$\nwhere $\\gamma$ is the discount factor. The key result: any MDP with potential-based shaping has the same set of optimal policies as the original MDP. This is a powerful guarantee — it means we can inject domain knowledge to speed up learning without worrying about introducing sub-optimal behavior.\nIntuition The potential function acts like a heuristic in search. If $\\Phi(s)$ is higher for states closer to the goal, transitions toward the goal receive positive shaping reward, and transitions away receive negative shaping reward. The agent gets denser feedback while still converging to the same solution.\nBeyond Potential-Based Shaping While potential-based shaping is theoretically clean, practitioners often use richer forms of reward shaping:\nDistance-based rewards: Reward proportional to progress toward a goal (e.g., negative distance to target). Simple but can create local optima. Curriculum-based shaping: Gradually increase task difficulty, effectively reshaping the reward landscape over time. Intrinsic motivation: Reward curiosity or novelty (e.g., ICM, RND) — a form of automatic reward shaping driven by prediction error. Reward learning from demonstrations: Use inverse RL or preference-based methods to learn a reward function, which can be seen as data-driven reward shaping. Pitfalls Reward shaping is powerful but introduces risks:\nReward hacking: The agent may exploit the shaped reward in unintended ways, achieving high shaped reward without solving the actual task. Non-potential-based shaping can change the optimal policy: Without the theoretical guarantees of potential-based shaping, there is no assurance that the agent will converge to the right behavior. Over-shaping: Too much shaping reward can dominate the true reward signal, effectively replacing the original objective. Connection to RLHF Reward shaping ideas are deeply relevant to RLHF for language models. The reward model trained on human preferences is itself a form of learned reward shaping — it provides a dense signal (per-token or per-response) that would otherwise be extremely sparse (humans can only evaluate so many outputs). The KL penalty in RLHF can also be viewed through a reward-shaping lens, acting as a potential-based term that regularizes toward the reference policy.\nOpen Questions How should we shape rewards in multi-agent or multi-objective settings? Can we automatically discover good potential functions from data? What is the right balance between shaping density and fidelity to the true objective? How do reward shaping insights apply to reasoning models trained with process rewards? References Ng, Harada, Russell. “Policy Invariance Under Reward Transformations.” ICML 1999. Pathak et al. “Curiosity-driven Exploration by Self-Supervised Prediction.” ICML 2017. Burda et al. “Exploration by Random Network Distillation.” ICLR 2019. ",
+  "wordCount" : "590",
+  "inLanguage": "en",
+  "datePublished": "2026-03-20T00:00:00Z",
+  "dateModified": "2026-03-20T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://anuragprat1k.github.io/posts/reward-shaping/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ap.grad",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://anuragprat1k.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="ap.grad (Alt + H)">ap.grad</a>
+            <a href="https://anuragprat1k.github.io/" accesskey="h" title="ap.grad (Alt + H)">ap.grad</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -131,7 +198,7 @@ In many environments, the natural reward signal is sparse. A game of chess provi
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/essays/" title="Essays">
+                <a href="https://anuragprat1k.github.io/essays/" title="Essays">
                     <span>Essays</span>
                 </a>
             </li>
@@ -203,15 +270,15 @@ In many environments, the natural reward signal is sparse. A game of chess provi
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/rl/">RL</a></li>
-      <li><a href="http://localhost:1313/tags/reward-shaping/">Reward Shaping</a></li>
+      <li><a href="https://anuragprat1k.github.io/tags/rl/">RL</a></li>
+      <li><a href="https://anuragprat1k.github.io/tags/reward-shaping/">Reward Shaping</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">ap.grad</a></span> · 
+        <span>&copy; 2026 <a href="https://anuragprat1k.github.io/">ap.grad</a></span> · 
 
     <span>
         Powered by

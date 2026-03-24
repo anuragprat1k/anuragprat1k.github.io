@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Reward Shaping for Discovery: A Wordle Case Study | ap.grad</title>
+<title>Discovery Needs Dense Rewards | ap.grad</title>
 <meta name="keywords" content="RL, reward shaping, GRPO, Wordle, LLM">
-<meta name="description" content="Fine-tuning a language model with RLVR is known to sharpen it — the policy concentrates on known solutions, boosting pass@1 while pass@k collapses (Yue et al., 2025; Zhao et al., 2025). This is increasingly treated as a fundamental property of RL on language models. But it shouldn&rsquo;t be. Sharpening is what happens when binary rewards provide zero gradient on problems the model can&rsquo;t already solve — the capability frontier never moves because the optimization has nothing to push against.">
+<meta name="description" content="Evidence from training a language model to play Wordle">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:52268/posts/wordle-reward-shaping/_index_v2/">
+<link rel="canonical" href="http://localhost:52268/posts/wordle-reward-shaping/_index_v3/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:52268/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:52268/favicon-16x16.png">
@@ -18,7 +18,7 @@
 <link rel="mask-icon" href="http://localhost:52268/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:52268/posts/wordle-reward-shaping/_index_v2/">
+<link rel="alternate" hreflang="en" href="http://localhost:52268/posts/wordle-reward-shaping/_index_v3/">
 <noscript>
     <style>
         #theme-toggle,
@@ -141,8 +141,11 @@
   <header class="post-header">
     
     <h1 class="post-title entry-hint-parent">
-      Reward Shaping for Discovery: A Wordle Case Study
+      Discovery Needs Dense Rewards
     </h1>
+    <div class="post-description">
+      Evidence from training a language model to play Wordle
+    </div>
     <div class="post-meta"><span title='2026-03-23 00:00:00 +0000 UTC'>March 23, 2026</span>
 
 </div>
@@ -151,16 +154,16 @@
 <p>Dense rewards should break this. Give the model credit for partial progress and it can bootstrap its way to solutions it never found before. But classical reward shaping theory (<a href="https://people.eecs.berkeley.edu/~pabbeel/cs287-fa09/readings/NgHaradaRussell-shaping-ICML1999.pdf">Ng et al., 1999</a>) warns that only <strong>potential-based</strong> shaping preserves the optimal policy. Anything else risks introducing spurious optima where the agent collects shaping reward without completing the task.</p>
 <p>I tested both claims on Wordle — a multi-turn game that gives natural dense feedback and is genuinely hard for small LLMs. Training Qwen3-4B with GRPO under different reward functions, I found:</p>
 <ol>
-<li><strong>Dense rewards drive discovery.</strong> 78% more unique words solved than sparse (355 vs 200), with neither curve plateauing at 1,000 steps.</li>
-<li><strong>Non-potential-based shaping helps, and removing it hurts.</strong> The &ldquo;theoretically correct&rdquo; ablation — keeping only potential-based reward components — dropped discovery by 34%.</li>
-<li><strong>The reason is algorithmic.</strong> GRPO needs reward variance to produce gradients. The &ldquo;dangerous&rdquo; non-potential component creates exactly the contrast between rollouts that GRPO&rsquo;s advantage estimation requires.</li>
+<li><strong>Dense rewards drive discovery.</strong> ~70% more unique words solved than sparse (336 vs 200), with neither curve plateauing at 1,000 steps.</li>
+<li><strong>Potential-based shaping is nearly sufficient.</strong> A greens-only reward (purely potential-based) matches full dense on discovery (331 vs 336). The classical theory&rsquo;s caution about non-potential shaping is largely irrelevant — you don&rsquo;t need the &ldquo;dangerous&rdquo; component to break the bootstrapping trap.</li>
+<li><strong>Non-potential shaping gives a modest edge on hard words.</strong> Yellows help with mastery — reliably solving words the model has only cracked once. Dense masters 128 words vs 119 for greens-only, with the gap concentrated on words requiring multi-turn chaining.</li>
 </ol>
-<p>This post walks through the setup, results, three distinct flavors of reward hacking, and what it means for LLM RL more broadly.</p>
+<p>The story is cleaner than I expected: the primary mechanism is breaking the zero-gradient barrier. Whether you break it with potential-based or non-potential-based shaping matters much less than whether you break it at all.</p>
 <h2 id="why-potential-based-shaping-matters-in-theory">Why potential-based shaping matters (in theory)<a hidden class="anchor" aria-hidden="true" href="#why-potential-based-shaping-matters-in-theory">#</a></h2>
 <p>Ng et al. (1999) proved that the only additive reward shaping that preserves the optimal policy is:</p>
 <p>$$F(s, s&rsquo;) = \gamma \Phi(s&rsquo;) - \Phi(s)$$</p>
 <p>where $\Phi$ maps states to reals. Any other form can change which policy is optimal. The motivating examples make the intuition concrete: in chess, rewarding +1 per captured piece (not potential-based — it depends on the action, not just the state) makes the agent prefer trading pieces over winning. In <a href="https://gwern.net/doc/reinforcement-learning/model-free/1998-randlov.pdf">Randløv &amp; Alstrøm&rsquo;s bicycle task</a>, rewarding the agent for moving toward a goal caused it to circle near the goal indefinitely, collecting shaping reward without arriving.</p>
-<p>This gives us a testable framework: decompose your reward into components, check which are potential-based, and predict where things go wrong.</p>
+<p>This gives us a concrete prediction: the non-potential-based yellow component should cause reward hacking, and removing it should improve learning.</p>
 <h2 id="the-reward-functions">The reward functions<a hidden class="anchor" aria-hidden="true" href="#the-reward-functions">#</a></h2>
 <p>All conditions share the same terminal and penalty components:</p>
 <ul>
@@ -192,18 +195,10 @@
           <td>+0.4 per new 🟩, no yellow reward</td>
           <td><strong>Yes</strong></td>
       </tr>
-      <tr>
-          <td><strong>Info-gain</strong></td>
-          <td>Bits of information gained (candidate set reduction)</td>
-          <td><strong>Yes</strong></td>
-      </tr>
   </tbody>
 </table>
-<p>Why these classifications?</p>
 <p><strong>Greens are potential-based.</strong> Cumulative green count is monotonically non-decreasing — once a position is green, it stays green. So $r_{\text{green}} = 0.4 \times \Delta\text{greens} = 0.4 \times (\Phi(s&rsquo;) - \Phi(s))$ where $\Phi(s) = \text{total greens in } s$.</p>
 <p><strong>Yellows are not potential-based.</strong> Yellow status is non-monotonic — a yellow letter can become green on a later turn, so the count of yellow-only letters can decrease. The yellow reward also gives +0.2 for including a letter known to be in the word regardless of whether the guess contains eliminated letters. This creates an incentive misaligned with optimal play: maximize tile matches, not candidate elimination.</p>
-<p><strong>Info-gain is potential-based.</strong> $\Phi(s) = \log_2 |\mathcal{C}(s)|$ where $\mathcal{C}(s)$ is the remaining candidate set. Since $|\mathcal{C}|$ shrinks monotonically, the reward is always non-negative and directly measures progress.</p>
-<p>The theory predicts: dense rewards should help discovery (more gradient signal), but the non-potential yellow component should cause reward hacking. Removing yellows should reduce this failure mode.</p>
 <h2 id="setup">Setup<a hidden class="anchor" aria-hidden="true" href="#setup">#</a></h2>
 <p>Wordle is a six-turn guessing game: guess a five-letter word, get colored feedback (🟩 right letter right position, 🟨 right letter wrong position, ⬜ not in word), narrow down the target. As an RL problem it has useful properties: multi-turn with structured feedback, measurable progress (the candidate set shrinks monotonically), and interpretable failures.</p>
 <p>The model outputs <code>&lt;guess&gt;WORD&lt;/guess&gt;</code> tags and the environment provides feedback including eliminated letters after each turn.</p>
@@ -215,43 +210,33 @@
 <table>
   <thead>
       <tr>
-          <th>Metric</th>
-          <th>Sparse</th>
-          <th>Dense</th>
+          <th>Condition</th>
+          <th>Unique solved</th>
+          <th>Mastered (solved 2+)</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td>Unique words solved</td>
+          <td><strong>Sparse</strong></td>
           <td>200</td>
-          <td><strong>355</strong></td>
-      </tr>
-      <tr>
-          <td>Mastered (solved 2+)</td>
           <td>58</td>
-          <td><strong>125</strong></td>
       </tr>
       <tr>
-          <td>Win rate (last 100 steps)</td>
-          <td>3.9%</td>
-          <td><strong>5.7%</strong></td>
+          <td><strong>Dense (greens only)</strong></td>
+          <td>331</td>
+          <td>119</td>
       </tr>
       <tr>
-          <td>Constraint violations</td>
-          <td>~65%</td>
-          <td>~73%</td>
-      </tr>
-      <tr>
-          <td>Invalid words (hallucinated)</td>
-          <td>~48%</td>
-          <td>~36%</td>
+          <td><strong>Dense</strong></td>
+          <td><strong>336</strong></td>
+          <td><strong>128</strong></td>
       </tr>
   </tbody>
 </table>
-<p>Dense rewards enable 78% more discovery — 355 distinct words solved versus 200. It also masters (reliably solves) twice as many. Neither curve plateaus at step 1,000:</p>
-<p><img alt="Discovery and mastery curves over 1,000 GRPO steps. Dense (green) consistently outpaces sparse (red) in both unique words discovered and words mastered." loading="lazy" src="discovery_curves.png"></p>
-<p>The mechanism is straightforward: sparse rewards give gradient signal only from winning episodes (~4% of rollouts). The other 96% get $r = -1.0$ uniformly — zero variance, zero advantage, zero learning. Dense rewards give nonzero signal on every episode, even losses, because partial progress (new greens and yellows) is rewarded.</p>
-<p>The animated plot below shows which words each condition learns to solve over training. Dense (green) covers much more of the word space, while sparse (red) clusters in narrower regions:</p>
+<p><img alt="Discovery and mastery curves over 1,000 GRPO steps." loading="lazy" src="discovery_curves.png"></p>
+<p>The dominant finding is <strong>dense vs sparse</strong>. Both dense conditions discover ~70% more unique words than sparse, with the gap opening early and widening steadily. Neither dense curve plateaus at step 1,000.</p>
+<p>The mechanism is the bootstrapping trap: sparse rewards give gradient signal only from winning episodes (~4% of rollouts). The other 96% get $r = -1.0$ uniformly — zero variance, zero advantage, zero learning. Any per-turn shaping breaks this by providing nonzero signal on losing episodes.</p>
+<p>The animated plot below shows <em>which</em> words each condition learns to solve over training. Dense (green) covers much more of the word space, while sparse (red) clusters in narrower regions:</p>
 
 
 <div id="word-coverage-animated" style="width:100%;max-width:800px;margin:0 auto;">
@@ -263,11 +248,14 @@
                         })                };            </script>        </div>
 </div>
 
-<p>Are the discovered words diverse or clustered? Tracking the first-letter entropy of mastered words answers this — higher entropy means the model solves words across diverse letter distributions rather than concentrating on one cluster.</p>
-<p><img alt="Mastered words first-letter entropy over training. Dense (green) reaches higher diversity earlier, but sparse (red) converges to a similar level by step 1,000." loading="lazy" src="mastered_entropy.png"></p>
-<p>By step 1,000, both conditions reach similar first-letter entropy (~3.0 bits), despite dense mastering 2× more words. This likely reflects convergence to the vocabulary&rsquo;s natural letter distribution rather than a shared bottleneck — as the set of mastered words grows, its letter distribution approaches the population&rsquo;s regardless of method. The practical difference is speed: dense reaches broad coverage by step 200, while sparse takes until step 650.</p>
+<h2 id="greens-only-nearly-matches-full-dense">Greens-only nearly matches full dense<a hidden class="anchor" aria-hidden="true" href="#greens-only-nearly-matches-full-dense">#</a></h2>
+<p>Dense and greens-only are nearly identical on discovery (336 vs 331 unique words). The non-potential yellow component — the part the theory warns about — barely moves the needle.</p>
+<p>The gap shows up in <strong>mastery</strong> (128 vs 119), where yellows give a modest edge on harder words. The traces show why. On the word LEVEL at step 500:</p>
+<p><strong>Greens only</strong> plays: CRANE → LEDGE (🟩🟩) → LEVEE (🟩🟩🟩🟩) → LEVEE → LEVEE → LEVEE. It finds a 4/5 green word and gets stuck repeating it three times. Without yellow incentives, there&rsquo;s nothing pushing the model to fix the last position.</p>
+<p><strong>Dense</strong> chains guesses via yellow feedback: STARE → AUDIO (finds A, D, O) → FRAUD (uses R, A, D). Each guess builds on the yellows from the previous turn. The +0.2 per yellow creates a direct incentive to reuse discovered letters.</p>
+<p>Yellows don&rsquo;t expand the frontier — discovery counts are the same. They <strong>consolidate</strong> it by teaching the model to carry information across turns, making existing discoveries more reliable. On a harder task with more partial-credit opportunities, this chaining skill might matter more.</p>
 <h2 id="the-constraint-violation-problem">The constraint violation problem<a hidden class="anchor" aria-hidden="true" href="#the-constraint-violation-problem">#</a></h2>
-<p>Both conditions show ~70% constraint violation rates — the model frequently guesses words containing letters it already knows aren&rsquo;t in the target. Format compliance is excellent (&gt;97%), so this isn&rsquo;t a parsing issue. The model reliably produces valid <code>&lt;guess&gt;</code> tags but ignores the semantic content of feedback.</p>
+<p>All conditions show ~70% constraint violation rates — the model frequently guesses words containing letters it already knows aren&rsquo;t in the target. Format compliance is excellent (&gt;97%), so this isn&rsquo;t a parsing issue. The model reliably produces valid <code>&lt;guess&gt;</code> tags but ignores the semantic content of feedback.</p>
 <p>A sample episode on the probe word ARDOR (dense, step 500):</p>
 <pre tabindex="0"><code>STARE → __🟨🟨_    (A,R in word but wrong positions)
 MARGO → invalid     (hallucinated word)
@@ -326,65 +314,59 @@ AUDIO → 🟩_🟨_🟨   (A correct, D and O in word — very close, but out o
 <h3 id="sft-initialization-sharpening-through-inherited-bias">SFT initialization: sharpening through inherited bias<a hidden class="anchor" aria-hidden="true" href="#sft-initialization-sharpening-through-inherited-bias">#</a></h3>
 <p>In an earlier version where the SFT expert always opened with CRANE, the model entered GRPO biased toward that opener. GRPO reinforced it: words starting with C give an immediate green on position 1 when opened with CRANE, earning +0.4 on the first guess. The model sharpened toward C-words — not because they&rsquo;re easier, but because they&rsquo;re easier <em>given the inherited opener</em>.</p>
 <p>The result: 27–32% of mastered words started with C (vs 7% in the vocabulary). Diversifying to five openers reduced C-bias to ~14%, but S-words rose to ~25% from SLATE/STARE. The bias shifted rather than disappeared — SFT initialization shapes the reward landscape GRPO explores, and GRPO exploits whatever local structure it finds.</p>
-<h2 id="the-ablation-surprise">The ablation surprise<a hidden class="anchor" aria-hidden="true" href="#the-ablation-surprise">#</a></h2>
-<p>The V4.1 results told a clean story: removing yellows cratered discovery (235 vs 355), proving that non-potential-based shaping was essential for GRPO. I believed it. Then V5 showed me I was wrong.</p>
-<p>The V4.1 runs had two confounds silently active: a −0.2 per-invalid-word penalty and a zero-reward-on-violation flag that zeroed the entire episode reward when violations occurred. When I reran everything from a clean SFT checkpoint with identical configs — varying only the reward function or loss type — the picture changed dramatically:</p>
+<h2 id="what-this-means-for-llm-rl-more-broadly">What this means for LLM RL more broadly<a hidden class="anchor" aria-hidden="true" href="#what-this-means-for-llm-rl-more-broadly">#</a></h2>
+<p><strong>Dense rewards break the bootstrapping trap, and it almost doesn&rsquo;t matter how.</strong> The 70% discovery gap between dense and sparse dwarfs the modest difference between potential-based and non-potential shaping. For practitioners designing RLVR reward functions, the first priority is breaking the zero-gradient barrier on hard problems. Potential-based purity is a distant second.</p>
+<p><strong>Dense reward is why game-playing RL discovers.</strong> AlphaZero&rsquo;s MCTS provides a dense value estimate at every board position. Robotics RL gets continuous feedback from physics at every timestep. Standard RLVR with binary rewards is the outlier — most RL domains have dense reward by default, which is why discovery is the norm there and sharpening is the pathology. The fix isn&rsquo;t exotic: just provide per-step feedback.</p>
+<p><strong>Non-potential shaping teaches skills, not coverage.</strong> Yellows didn&rsquo;t expand the frontier — greens-only discovers almost as many words. But yellows teach multi-turn chaining, which helps the model reliably solve hard words it only cracked once before. Non-potential components are most useful when they encode a specific skill (like &ldquo;reuse letters from previous feedback&rdquo;) rather than just a proxy for task completion.</p>
+<p><strong>Reward hacking is plural, not singular.</strong> Task avoidance (sparse tag corruption), reward-metric divergence (dense slow erosion), and initialization exploitation (CRANE bias) each have distinct mechanisms and require different fixes. The potential-based framework predicts the second but misses the first and third entirely.</p>
+<h2 id="scaling-to-3000-steps-yellows-matter-more-with-longer-training">Scaling to 3000 steps: yellows matter more with longer training<a hidden class="anchor" aria-hidden="true" href="#scaling-to-3000-steps-yellows-matter-more-with-longer-training">#</a></h2>
+<p>At 1000 steps, dense and greens-only were nearly identical (336 vs 331). Do they stay that way? I merged the step-1000 LoRA adapters into new base models and ran 2000 more GRPO steps each.</p>
+<p><img alt="Discovery and mastery curves over 3000 total steps. Dense (blue) pulls ahead of greens-only (green) in the second phase, especially on mastery." loading="lazy" src="discovery_3k.png"></p>
 <table>
   <thead>
       <tr>
           <th>Condition</th>
-          <th>Unique solved</th>
-          <th>Mastered</th>
-          <th>Notes</th>
+          <th>1000 steps</th>
+          <th>3000 steps</th>
+          <th>Growth</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td><strong>Sparse</strong> (V4 reference)</td>
-          <td>200</td>
-          <td>58</td>
-          <td>Terminal only</td>
+          <td>Dense unique</td>
+          <td>336</td>
+          <td>767</td>
+          <td>+431 (+128%)</td>
       </tr>
       <tr>
-          <td><strong>Dense GRPO</strong></td>
-          <td><strong>336</strong></td>
-          <td><strong>128</strong></td>
-          <td>0.4/green + 0.2/yellow</td>
+          <td>Dense mastered</td>
+          <td>128</td>
+          <td>539</td>
+          <td>+411 (+321%)</td>
       </tr>
       <tr>
-          <td><strong>Dense greens only</strong></td>
-          <td><strong>331</strong></td>
-          <td><strong>119</strong></td>
-          <td>0.4/green, no yellows</td>
+          <td>Greens unique</td>
+          <td>331</td>
+          <td>695</td>
+          <td>+364 (+110%)</td>
       </tr>
       <tr>
-          <td>Dense CISPO</td>
-          <td>297</td>
-          <td>93</td>
-          <td>Same dense reward, CISPO loss</td>
+          <td>Greens mastered</td>
+          <td>119</td>
+          <td>418</td>
+          <td>+299 (+251%)</td>
       </tr>
   </tbody>
 </table>
-<p>Dense greens-only gets 331 unique solves — nearly identical to full dense at 336. In V4.1 it got 235. The difference wasn&rsquo;t the missing yellows. It was the penalty confound crushing GRPO&rsquo;s gradient signal.</p>
-<p>So yellows are not essential for discovery. The per-turn reward variance from greens alone is sufficient for GRPO to learn. This reverses the V4.1 headline conclusion.</p>
-<p>But yellows aren&rsquo;t useless either. Trace analysis reveals a subtler role: they improve per-episode play quality on hard words, even if that doesn&rsquo;t move the aggregate discovery numbers much.</p>
-<p>On LEVEL at step 500, <strong>greens-only</strong> plays: CRANE → LEDGE (🟩🟩) → LEVEE (🟩🟩🟩🟩) → LEVEE → LEVEE → LEVEE. It finds a 4/5 green word and gets stuck repeating it three times — there&rsquo;s no yellow incentive to fix the last position. <strong>Dense</strong> chains guesses via yellow feedback: STARE → AUDIO (finds A, D, O) → FRAUD (uses R, A, D). Each guess builds on the yellows from the previous turn.</p>
-<p>Hard words are rare enough that this difference barely registers in the aggregate. But it&rsquo;s real, and on a harder task with more partial-credit opportunities, yellows might matter more.</p>
-<p>The more interesting V5 finding is CISPO. Same dense reward, different loss function — and it underperforms GRPO by 39 unique solves (297 vs 336). CISPO&rsquo;s conservative clipping appears to slow exploitation of easy wins. But the traces show a compensating strength: on BLUFF, CISPO plays ADIEU → FLUSH (🟨🟩🟩) → FLUFF (🟩🟩🟩🟩) — one letter off from solving, with clean chaining. GRPO on the same word collapses into four invalid words. CISPO discovers fewer words but plays the ones it attempts more coherently.</p>
-<h2 id="why-the-theory-doesnt-bind-here">Why the theory doesn&rsquo;t bind here<a hidden class="anchor" aria-hidden="true" href="#why-the-theory-doesnt-bind-here">#</a></h2>
-<p>Ng et al.&rsquo;s theorem guarantees that only potential-based shaping preserves the optimal policy <em>at convergence in the tabular setting</em>. Three features of LLM RL break this:</p>
-<p><strong>You never converge.</strong> GRPO runs for a bounded number of noisy gradient steps on a massive non-convex landscape. The relevant question isn&rsquo;t &ldquo;does this reward preserve the right fixed point?&rdquo; but &ldquo;does it provide useful gradient direction in the first few hundred steps?&rdquo; A non-potential reward pointing roughly toward better solutions beats zero gradient from binary reward, even if it would eventually lead somewhere suboptimal.</p>
-<p><strong>The KL constraint already changes the optimal policy.</strong> It means you&rsquo;re already not optimizing pure reward — you&rsquo;re finding the best policy that stays close to the base model. That&rsquo;s a compromise by design. Adding a non-potential reward component shifts which compromise you land on, and the new compromise can be better if it provides gradient signal where the original reward gave none.</p>
-<p><strong>The pretrained prior makes approximate rewards robust.</strong> In tabular RL from scratch, bad reward can lead anywhere. A pretrained LLM has strong priors about valid English words and reasoning patterns. A noisy reward that says &ldquo;this guess used feedback better&rdquo; gets amplified by priors the model already has. The prior acts as a regularizer that makes RL robust to reward imperfections that would be catastrophic without it.</p>
-<p>The practical implication: <strong>reward variance matters more than reward correctness for GRPO.</strong> A theoretically messy reward that creates strong contrast between good and bad rollouts will outperform a theoretically clean reward with less variance. This may be specific to GRPO&rsquo;s advantage estimation — PPO with a learned value function might behave differently.</p>
-<h2 id="what-this-means-for-llm-rl-more-broadly">What this means for LLM RL more broadly<a hidden class="anchor" aria-hidden="true" href="#what-this-means-for-llm-rl-more-broadly">#</a></h2>
-<p><strong>Dense rewards break the bootstrapping trap.</strong> Standard RLVR with binary rewards can only reinforce solutions the model already produces. On hard problems with 0/16 correct rollouts, the gradient is zero. Dense per-step rewards provide signal from partial progress, enabling the ratchet mechanism: learn to get steps 1-4 right → eventually get step 5 right → reinforce. This is why AlphaZero discovers where LLM RL sharpens — MCTS provides a dense value estimate at every board position, not binary win/lose on complete games.</p>
-<p><strong>Penalties are the real discovery killer.</strong> V4.1 blamed missing yellows for a 34% drop in discovery. V5 showed the actual culprits were the −0.2 invalid-word penalty and zero-reward-on-violation flag. Penalties compress the reward distribution downward, making most rollouts uniformly negative. GRPO estimates advantages from within-group variance — when everything scores badly, there&rsquo;s no contrast to learn from. If you want to discourage bad behavior under GRPO, find ways to reward the alternative rather than penalizing the failure.</p>
-<p><strong>Reward component ablations require isolation.</strong> The V4.1 greens-only ablation changed three things simultaneously: removed yellows, added a penalty, and activated zero-reward-on-violation. The conclusion attributed all the damage to the missing yellows. V5&rsquo;s clean ablation — changing exactly one thing — showed yellows account for almost none of it. This is basic experimental methodology, but it&rsquo;s easy to forget when reward functions accumulate flags across iterations.</p>
-<p><strong>The loss function matters as much as the reward.</strong> CISPO with identical dense rewards underperformed GRPO by 12% on discovery (297 vs 336) while producing more coherent play on hard words. The choice of RL algorithm isn&rsquo;t just an implementation detail — it determines which aspects of the reward landscape the optimizer exploits.</p>
-<p><strong>Reward hacking is plural, not singular.</strong> Task avoidance (sparse tag corruption), reward-metric divergence (dense slow erosion), and initialization exploitation (CRANE bias) each have distinct mechanisms and require different fixes. Potential-based analysis catches the second but misses the first and third entirely.</p>
+<p>Dense now leads by <strong>10% on unique</strong> (767 vs 695) and <strong>29% on mastered</strong> (539 vs 418). The mastery gap is the real story — dense reliably solves words that greens-only merely discovers once or twice.</p>
+<p>The traces explain why. With more training, the model encounters harder words that require multi-step reasoning from yellow feedback. Three patterns emerge:</p>
+<p><strong>Pattern 1: Yellow chaining narrows to solution.</strong> On LEVEL at step 3000, dense plays: SLATE → RELAY(🟩🟨) → LEMON(🟩🟩) → LEACH(🟩🟩) → LEAVE(🟩🟩+🟨🟨!) → BEVEL(🟩🟩🟩🟩). Each guess builds on yellows from the previous turn — the model learns that E and V need to swap positions. Greens-only on the same word: ADIEU → TREND → PEELS → CLOVE → BLEWY(invalid) → FIELD. It finds the same letter information but can&rsquo;t chain it into convergence.</p>
+<p><strong>Pattern 2: Greens-only gets stuck at local maxima.</strong> At step 1500, greens-only found LEVEE (🟩🟩🟩🟩) for LEVEL — 4/5 greens, the maximum possible reward per turn. Then it repeated LEVEE three more times. Without yellow reward, there&rsquo;s no gradient signal saying &ldquo;the last position is wrong.&rdquo; Dense never gets stuck this way because yellows reward progress toward fixing remaining positions.</p>
+<p><strong>Pattern 3: Greens-only plays more conservatively.</strong> On KNACK, greens-only plays SLATE → CHART → MACON(finds A,C,N) → QUACK(🟩🟩🟩!) — real words, building on greens. Dense hallucinates more (OGAMI, PAHDA, MANSA). Greens-only develops a cautious, green-hunting strategy; dense develops an aggressive, yellow-chaining strategy. The aggressive strategy discovers more but also produces more garbage.</p>
+<p>The takeaway: <strong>yellows become essential at scale.</strong> At 1000 steps, the model is still learning basic patterns where greens provide enough signal. By 3000 steps, it&rsquo;s encountered enough hard words that yellow-based reasoning becomes the differentiator. The mastery gap (29%) is larger than the discovery gap (10%) because yellows help the model <em>reliably converge</em> on specific words across multiple attempts, not just stumble onto them once.</p>
+<p>Both curves are still climbing at 3000 steps — dense has covered 50% of the vocabulary (767/1537), greens-only 45% (695/1537). Neither is plateauing. The question is whether they&rsquo;d converge again at 5000+ steps, or whether the yellow advantage compounds.</p>
 <hr>
-<p><em>This is ongoing work. Pass@k evaluations are in progress. Code is at <a href="https://github.com/anuragprat1k/discovery">github.com/anuragprat1k/discovery</a> on the <code>feat/gpu-autoresearch</code> branch. Training logs are on <a href="https://wandb.ai/anuragprateek/wordle-grpo">WandB</a>.</em></p>
+<p><em>This is ongoing work. Code is at <a href="https://github.com/anuragprat1k/discovery">github.com/anuragprat1k/discovery</a> on the <code>feat/gpu-autoresearch</code> branch. Training logs are on <a href="https://wandb.ai/anuragprateek/wordle-grpo">WandB</a>.</em></p>
 <h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
 <ol>
 <li>Ng, Harada, Russell. <a href="https://people.eecs.berkeley.edu/~pabbeel/cs287-fa09/readings/NgHaradaRussell-shaping-ICML1999.pdf">&ldquo;Policy Invariance Under Reward Transformations.&rdquo;</a> ICML 1999.</li>
