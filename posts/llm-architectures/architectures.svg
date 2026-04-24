@@ -1,0 +1,134 @@
+<svg viewBox="0 0 680 440" role="img" xmlns="http://www.w3.org/2000/svg" class="arch-svg" style="width:100%;height:auto;max-width:760px;display:block;margin:1.5em auto;font-family:-apple-system,'system-ui','Segoe UI',sans-serif">
+  <title>Architectural progression: GPT-2 to Llama-2 to Mixtral transformer blocks</title>
+  <desc>Three transformer blocks side by side. GPT-2 uses LayerNorm, multi-head attention, LayerNorm, and a GELU MLP. Llama-2 replaces all four with RMSNorm, grouped-query attention with RoPE, RMSNorm, and a SwiGLU MLP. Mixtral keeps Llama-2's norm and attention but swaps the MLP for a sparse mixture-of-experts layer.</desc>
+  <style>
+    .arch-svg text { fill: #27272a; }
+    .arch-svg .sub { fill: #52525b; }
+    .arch-svg .line { stroke: #71717a; }
+    .arch-svg .n-fill { fill: #f4f4f5; }
+    .arch-svg .n-stroke { stroke: #a1a1aa; }
+    .arch-svg .n-label { fill: #27272a; }
+    .arch-svg .n-sub { fill: #52525b; }
+    .arch-svg .g-fill { fill: #d1fae5; }
+    .arch-svg .g-stroke { stroke: #059669; }
+    .arch-svg .g-label { fill: #065f46; }
+    .arch-svg .g-sub { fill: #047857; }
+    .arch-svg .v-fill { fill: #ede9fe; }
+    .arch-svg .v-stroke { stroke: #6d28d9; }
+    .arch-svg .v-label { fill: #5b21b6; }
+    .arch-svg .v-sub { fill: #6d28d9; }
+
+    @media (prefers-color-scheme: dark) {
+      .arch-svg text { fill: #f4f4f5; }
+      .arch-svg .sub { fill: #a1a1aa; }
+      .arch-svg .line { stroke: #a1a1aa; }
+      .arch-svg .n-fill { fill: #27272a; }
+      .arch-svg .n-stroke { stroke: #71717a; }
+      .arch-svg .n-label { fill: #f4f4f5; }
+      .arch-svg .n-sub { fill: #a1a1aa; }
+      .arch-svg .g-fill { fill: #064e3b; }
+      .arch-svg .g-stroke { stroke: #10b981; }
+      .arch-svg .g-label { fill: #a7f3d0; }
+      .arch-svg .g-sub { fill: #6ee7b7; }
+      .arch-svg .v-fill { fill: #4c1d95; }
+      .arch-svg .v-stroke { stroke: #8b5cf6; }
+      .arch-svg .v-label { fill: #ddd6fe; }
+      .arch-svg .v-sub { fill: #c4b5fd; }
+    }
+
+    :root[data-theme="dark"] .arch-svg text { fill: #f4f4f5; }
+    :root[data-theme="dark"] .arch-svg .sub { fill: #a1a1aa; }
+    :root[data-theme="dark"] .arch-svg .line { stroke: #a1a1aa; }
+    :root[data-theme="dark"] .arch-svg .n-fill { fill: #27272a; }
+    :root[data-theme="dark"] .arch-svg .n-stroke { stroke: #71717a; }
+    :root[data-theme="dark"] .arch-svg .n-label { fill: #f4f4f5; }
+    :root[data-theme="dark"] .arch-svg .n-sub { fill: #a1a1aa; }
+    :root[data-theme="dark"] .arch-svg .g-fill { fill: #064e3b; }
+    :root[data-theme="dark"] .arch-svg .g-stroke { stroke: #10b981; }
+    :root[data-theme="dark"] .arch-svg .g-label { fill: #a7f3d0; }
+    :root[data-theme="dark"] .arch-svg .g-sub { fill: #6ee7b7; }
+    :root[data-theme="dark"] .arch-svg .v-fill { fill: #4c1d95; }
+    :root[data-theme="dark"] .arch-svg .v-stroke { stroke: #8b5cf6; }
+    :root[data-theme="dark"] .arch-svg .v-label { fill: #ddd6fe; }
+    :root[data-theme="dark"] .arch-svg .v-sub { fill: #c4b5fd; }
+
+    :root[data-theme="light"] .arch-svg text { fill: #27272a; }
+    :root[data-theme="light"] .arch-svg .sub { fill: #52525b; }
+    :root[data-theme="light"] .arch-svg .line { stroke: #71717a; }
+    :root[data-theme="light"] .arch-svg .n-fill { fill: #f4f4f5; }
+    :root[data-theme="light"] .arch-svg .n-stroke { stroke: #a1a1aa; }
+    :root[data-theme="light"] .arch-svg .n-label { fill: #27272a; }
+    :root[data-theme="light"] .arch-svg .n-sub { fill: #52525b; }
+    :root[data-theme="light"] .arch-svg .g-fill { fill: #d1fae5; }
+    :root[data-theme="light"] .arch-svg .g-stroke { stroke: #059669; }
+    :root[data-theme="light"] .arch-svg .g-label { fill: #065f46; }
+    :root[data-theme="light"] .arch-svg .g-sub { fill: #047857; }
+    :root[data-theme="light"] .arch-svg .v-fill { fill: #ede9fe; }
+    :root[data-theme="light"] .arch-svg .v-stroke { stroke: #6d28d9; }
+    :root[data-theme="light"] .arch-svg .v-label { fill: #5b21b6; }
+    :root[data-theme="light"] .arch-svg .v-sub { fill: #6d28d9; }
+  </style>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="135" y="32" text-anchor="middle" font-size="14" font-weight="600">GPT-2</text>
+  <text x="135" y="50" text-anchor="middle" font-size="12" class="sub">2019</text>
+  <text x="340" y="32" text-anchor="middle" font-size="14" font-weight="600">Llama-2</text>
+  <text x="340" y="50" text-anchor="middle" font-size="12" class="sub">2023</text>
+  <text x="545" y="32" text-anchor="middle" font-size="14" font-weight="600">Mixtral</text>
+  <text x="545" y="50" text-anchor="middle" font-size="12" class="sub">2023</text>
+
+  <rect x="40" y="80" width="190" height="44" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="135" y="106" text-anchor="middle" font-size="14" font-weight="500" class="n-label">LayerNorm</text>
+  <line x1="135" y1="124" x2="135" y2="146" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="40" y="148" width="190" height="56" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="135" y="170" text-anchor="middle" font-size="14" font-weight="500" class="n-label">Multi-head attention</text>
+  <text x="135" y="190" text-anchor="middle" font-size="12" class="n-sub">Full causal, learned pos.</text>
+  <line x1="135" y1="204" x2="135" y2="226" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="40" y="228" width="190" height="44" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="135" y="254" text-anchor="middle" font-size="14" font-weight="500" class="n-label">LayerNorm</text>
+  <line x1="135" y1="272" x2="135" y2="294" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="40" y="296" width="190" height="56" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="135" y="318" text-anchor="middle" font-size="14" font-weight="500" class="n-label">GELU MLP</text>
+  <text x="135" y="338" text-anchor="middle" font-size="12" class="n-sub">4·d hidden</text>
+
+  <rect x="245" y="80" width="190" height="44" rx="8" class="g-fill g-stroke" stroke-width="1"/>
+  <text x="340" y="106" text-anchor="middle" font-size="14" font-weight="500" class="g-label">RMSNorm</text>
+  <line x1="340" y1="124" x2="340" y2="146" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="245" y="148" width="190" height="56" rx="8" class="g-fill g-stroke" stroke-width="1"/>
+  <text x="340" y="170" text-anchor="middle" font-size="14" font-weight="500" class="g-label">Grouped-query attn</text>
+  <text x="340" y="190" text-anchor="middle" font-size="12" class="g-sub">With RoPE on q, k</text>
+  <line x1="340" y1="204" x2="340" y2="226" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="245" y="228" width="190" height="44" rx="8" class="g-fill g-stroke" stroke-width="1"/>
+  <text x="340" y="254" text-anchor="middle" font-size="14" font-weight="500" class="g-label">RMSNorm</text>
+  <line x1="340" y1="272" x2="340" y2="294" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="245" y="296" width="190" height="56" rx="8" class="g-fill g-stroke" stroke-width="1"/>
+  <text x="340" y="318" text-anchor="middle" font-size="14" font-weight="500" class="g-label">SwiGLU MLP</text>
+  <text x="340" y="338" text-anchor="middle" font-size="12" class="g-sub">8/3·d hidden, gated</text>
+
+  <rect x="450" y="80" width="190" height="44" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="545" y="106" text-anchor="middle" font-size="14" font-weight="500" class="n-label">RMSNorm</text>
+  <line x1="545" y1="124" x2="545" y2="146" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="450" y="148" width="190" height="56" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="545" y="170" text-anchor="middle" font-size="14" font-weight="500" class="n-label">Grouped-query attn</text>
+  <text x="545" y="190" text-anchor="middle" font-size="12" class="n-sub">With RoPE on q, k</text>
+  <line x1="545" y1="204" x2="545" y2="226" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="450" y="228" width="190" height="44" rx="8" class="n-fill n-stroke" stroke-width="1"/>
+  <text x="545" y="254" text-anchor="middle" font-size="14" font-weight="500" class="n-label">RMSNorm</text>
+  <line x1="545" y1="272" x2="545" y2="294" class="line" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="450" y="296" width="190" height="56" rx="8" class="v-fill v-stroke" stroke-width="1"/>
+  <text x="545" y="318" text-anchor="middle" font-size="14" font-weight="500" class="v-label">Sparse MoE</text>
+  <text x="545" y="338" text-anchor="middle" font-size="12" class="v-sub">Top-2 of N experts</text>
+
+  <g transform="translate(40, 386)">
+    <rect x="0" y="0" width="14" height="14" rx="3" class="n-fill n-stroke" stroke-width="1"/>
+    <text x="22" y="11" font-size="12" class="sub">Baseline / carried over</text>
+    <rect x="200" y="0" width="14" height="14" rx="3" class="g-fill g-stroke" stroke-width="1"/>
+    <text x="222" y="11" font-size="12" class="sub">Changed in Llama-2</text>
+    <rect x="380" y="0" width="14" height="14" rx="3" class="v-fill v-stroke" stroke-width="1"/>
+    <text x="402" y="11" font-size="12" class="sub">Changed in Mixtral</text>
+  </g>
+</svg>
