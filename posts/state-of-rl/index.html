@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>The State of Reinforcement Learning | ap.grad</title>
+<meta name="keywords" content="RL, RLVR, GRPO, LLM">
+<meta name="description" content="Ever since DeepSeek-R1 popularized Reinforcement Learning using verifiable rewards (RLVR), LLM post-training has been preoccupied with scaling RLVR and the intermezzo of funneling back trajectories into mid-training or doing RL on synthetic tasks with rubric-based rewards to build better inductive priors for RLVR. I wanted to understand where these current approaches fit into the much broader context of RL and lessons we can draw about the nature of research progress &mdash; what works, what doesn&rsquo;t and where to go next.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/state-of-rl/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/state-of-rl/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError : false
+        });
+    });
+</script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+.social-icons svg {
+    width: 20px;
+    height: 20px;
+}
+</style>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="ap.grad (Alt + H)">ap.grad</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/essays/" title="Essays">
+                    <span>Essays</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      The State of Reinforcement Learning
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-meta"><span title='2026-04-04 00:00:00 +0000 UTC'>April 4, 2026</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Ever since DeepSeek-R1 popularized Reinforcement Learning using verifiable rewards (RLVR), LLM post-training has been preoccupied with scaling RLVR and the intermezzo of funneling back trajectories into mid-training or doing RL on synthetic tasks with rubric-based rewards to build better inductive priors for RLVR. I wanted to understand where these current approaches fit into the much broader context of RL and lessons we can draw about the nature of research progress &mdash; what works, what doesn&rsquo;t and where to go next.</p>
+<h2 id="prologue-td-rightarrow-mc-estimate">Prologue: TD $\rightarrow$ MC estimate<a hidden class="anchor" aria-hidden="true" href="#prologue-td-rightarrow-mc-estimate">#</a></h2>
+<p>ChatGPT popularized RLHF using PPO but then we learned<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> that we don&rsquo;t need low-variance estimators because instruction-tuned checkpoints of LLMs that RL is initialized from are strongly conditioned and simple REINFORCE-style policy gradient can even outperform PPO. PPO uses a token-level clipped objective modeling each token as an action. REINFORCE modeled the entire completion as an action, as in the bandit formulation, to directly optimize the KL-shaped reward objective for the entire sequence using the moving average of all rewards throughout training to reduce variance of the estimator. Instead of 4 models that PPO needs (the generator, the reference for KL estimation, the critic and the reward model), REINFORCE needs one less model copy.</p>
+<p><strong>On RL&rsquo;s bias&ndash;variance tradeoff.</strong>
+All of RL wrt LLMs is model free and is about trying to find an optimal policy for an MDP (defined by states, actions, rewards). Different RL methods try to deal with the variance of RL trajectories in different ways &mdash; TD methods bootstrap from learnt value functions (low variance but biased), while Monte Carlo methods estimate returns from complete rollouts (unbiased but high variance). In LLM post-training, PPO roughly lives on the TD/low-variance end of this spectrum (actor&ndash;critic with GAE-style bootstrapping), whereas GRPO/REINFORCE-style RLVR is closer to the MC/traditionally high-variance end (sequence-level returns from completed samples, with variance controlled via grouping, baselines, and normalization) except that we know that for LLMs the variance isn&rsquo;t that high with MC estimates. This begs the question what other differences do these methods learn? And what are the virtues of each?</p>
+<p><strong>Sharpening vs Discovery in RLVR.</strong>
+RLVR is notorious for simply sharpening behaviors which is not ideal for RL. It does this by simply upweighting successful trajectories but never really discovering new ones. <!-- TODO: add references --></p>
+<h2 id="how-is-rl-used-in-other-domains">How is RL used in other domains?<a hidden class="anchor" aria-hidden="true" href="#how-is-rl-used-in-other-domains">#</a></h2>
+<p>I wanted to look at a few other domains where RL has been traditionally used to draw parallels on the MDP setup. Most popularly, there are games (for which we look at chess, StarCraft) and robotics.</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>MDP Element</strong></th>
+          <th><strong>Chess (AlphaZero)</strong></th>
+          <th><strong>Robotics</strong></th>
+          <th><strong>LLM &mdash; Token MDP</strong></th>
+          <th><strong>LLM &mdash; Seq. Bandit</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>State</strong> $\mathcal{S}$</td>
+          <td>Board position. Discrete, finite, fully observable.</td>
+          <td>Joint angles, velocities, sensor readings. Continuous, partially observable (POMDP).</td>
+          <td>Prompt $\oplus$ tokens so far. Discrete, fully observable, grows with each step.</td>
+          <td>Prompt only. Single state per episode.</td>
+      </tr>
+      <tr>
+          <td><strong>Action</strong> $\mathcal{A}$</td>
+          <td>Legal move (~30 avg). Discrete, state-dependent.</td>
+          <td>Motor torques. Continuous ($\mathbb{R}^n$), bounded.</td>
+          <td>Next token from vocab $|V| \approx 32\text{k&ndash;}128\text{k}$. Discrete, fixed.</td>
+          <td>Full response $\in V^{\leq T}$. Combinatorial macro-action.</td>
+      </tr>
+      <tr>
+          <td><strong>Transition</strong> $P(s&rsquo;|s,a)$</td>
+          <td>Deterministic (opponent adds stochasticity from agent&rsquo;s view).</td>
+          <td>Stochastic (contact, friction). Often unknown; sim-to-real gap.</td>
+          <td>Deterministic: $s&rsquo; = [s; a]$ (concatenation).</td>
+          <td>N/A &mdash; single step, no transition.</td>
+      </tr>
+      <tr>
+          <td><strong>Reward</strong> $R$</td>
+          <td>Terminal: $\{+1, 0, -1\}$. Ground-truth, sparse, no proxy.</td>
+          <td>Dense (shaped) or sparse (binary). Often a learned proxy (IRL, VLM).</td>
+          <td>$R = \text{RM}(y) - \beta, D_{\text{KL}}(\pi \| \pi_{\text{ref}})$. Learned proxy per sequence + KL penalty per token.</td>
+          <td>$R = \text{RM}(y)$ or verifiable signal. Scalar per response. Verifiable $\approx$ chess regime.</td>
+      </tr>
+      <tr>
+          <td><strong>Discount</strong> $\gamma$</td>
+          <td>$\gamma = 1$ (finite game).</td>
+          <td>$\gamma \in [0.95, 0.999]$. Eff. horizon $\approx 1/(1{-}\gamma)$.</td>
+          <td>$\gamma = 1$ (finite sequence). KL serves similar regularizing role.</td>
+          <td>N/A &mdash; horizon $= 1$.</td>
+      </tr>
+      <tr>
+          <td><strong>Horizon</strong> $H$</td>
+          <td>Variable, ~40&ndash;80 moves. MCTS handles depth.</td>
+          <td>50&ndash;1000+ steps. Long horizon $\Rightarrow$ hard credit assignment.</td>
+          <td>$T$ tokens (~100&ndash;8k+). Credit assignment over tokens is the core challenge.</td>
+          <td>$H = 1$. No temporal credit assignment $\Rightarrow$ critic-free (GRPO).</td>
+      </tr>
+      <tr>
+          <td><strong>Value est.</strong></td>
+          <td>MCTS + learned $V(s)$. Low bias, moderate variance.</td>
+          <td>GAE($\lambda$) with learned critic. $\lambda$ interpolates bias&ndash;variance.</td>
+          <td>GAE($\lambda$) with critic (PPO-RLHF). Same as robotics.</td>
+          <td>Group mean baseline (REINFORCE). Zero bias, higher variance managed by group size.</td>
+      </tr>
+  </tbody>
+</table>
+<p><em>Table: MDP formulation comparison across RL domains. The token-level MDP (Ziegler et al., 2019; Ouyang et al., 2022) and sequence-level bandit (Shao et al., 2024) represent two framings of RL for LLM post-training.</em></p>
+<h2 id="finding-the-most-suitable-method-for-a-problem">Finding the most suitable method for a problem<a hidden class="anchor" aria-hidden="true" href="#finding-the-most-suitable-method-for-a-problem">#</a></h2>
+<p>There are many ways to learn a policy in model-free RL &mdash; learn the value function, learn the policy directly, or learn both in tandem. In practice, the choice is less about ideology and more about what signal you can reliably extract from your environment.</p>
+<p>If your reward is <em>dense</em>, horizons are <em>long</em>, and you expect many partially-correct trajectories, actor&ndash;critic methods (TD-style) are attractive: a learned value function can turn noisy experience into lower-variance learning signals. PPO sits in this camp.</p>
+<p>If your reward is <em>clean but sparse</em> (typical RLVR: unit tests, exact answers, verifiers) and rollouts are relatively cheap, Monte Carlo-style sequence-level updates can be compelling: you avoid learning a fragile critic and optimize directly against the outcome signal. GRPO/REINFORCE-style training is closer to this camp, usually with variance reduction coming from grouping, baselines, and careful normalization.</p>
+<p>The uncomfortable truth is that both approaches fail when the environment is under-specified: if success is hard to verify, credit assignment is delayed, and exploration is the bottleneck, the algorithm matters less than curricula, task design, and evaluation. That is why many 2026 systems mix paradigms: they use SFT to raise solve rate, RLVR to sharpen outcomes where verifiers exist, and rubric-style rewards when they need denser guidance.</p>
+<!-- TODO: What does the mode-seeking KL regularization do to the optimization? Is mode covering better? -->
+<h2 id="era-of-rlvr">Era of RLVR<a hidden class="anchor" aria-hidden="true" href="#era-of-rlvr">#</a></h2>
+<p>On the face of it, RLVR is quite simple &mdash; you generate a group of samples, verify correctness programmatically (using gold truth answers or heuristics for formatting) and then plug this into a REINFORCE-style policy gradient objective, hence called Group Relative Policy Optimization (GRPO). DeepSeek-R1<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> showed that this relatively simple reward design along with asking the model to reason and cycling traces back into SFT to RL again scales performance well. So what if the reasoning traces it produces are incomprehensibly long and nothing that a human would come up with? But GRPO worked so we got behind it.</p>
+<p>This was also the time that tool use was becoming good enough for LLMs to be used for agentic usecases. Operator<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, the first general browser agent, was followed by ChatGPT Agent<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> but despite the early promise the responses were lukewarm. These agents weren&rsquo;t, and aren&rsquo;t great yet.</p>
+<p>Most of the work since has been on scaling data including frameworks that allow generating rollouts asynchronously and some incremental work on changing the algorithm itself &mdash; clipping the importance sampling weights while preserving gradients so critical low-probability tokens like <em>However, Wait, Aha</em> don&rsquo;t get discarded<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, dynamic sampling to discard prompts that are too easy or too hard<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>. More recently focus has shifted to using verifiable rubrics as rewards<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>.</p>
+<p>The strength of RLVR is that it is simple to scale and implement. Its weakness is that it is painfully slow in practice for complex agents or long horizon tasks.</p>
+<p>Perhaps it throws the baby out with the bathwater &mdash; it is unlike how we humans learn to reason, but it is a bit like how we learn to play chess where rewards are terminal. Are there lessons from how Stockfish is trained that we can use potentially?</p>
+<p>But many questions remain open. I use them as the organizing structure for the rest of the essay:</p>
+<!-- TODO: continue with open questions -->
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Ahmadian et al., 2024. <a href="https://arxiv.org/abs/2402.14740">Back to Basics: Revisiting REINFORCE Style Optimization for Learning from Human Feedback in LLMs</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>DeepSeek-AI, 2025. <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://openai.com/index/introducing-operator/">Introducing Operator</a>, OpenAI, 2025.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://openai.com/index/chatgpt-agent/">ChatGPT Agent</a>, OpenAI, 2025.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>Yu et al., 2025. <a href="https://arxiv.org/abs/2506.13585">DAPO: An Open-Source LLM Reinforcement Learning System</a>.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p>Liu et al., 2025. <a href="https://arxiv.org/abs/2503.14476">Understanding R1-Zero-Like Training: A Critical Perspective</a>.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p>Luong et al., 2025. <a href="https://arxiv.org/abs/2507.17746">Rubric-Based Reward Models</a>.&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/rl/">RL</a></li>
+      <li><a href="http://localhost:1313/tags/rlvr/">RLVR</a></li>
+      <li><a href="http://localhost:1313/tags/grpo/">GRPO</a></li>
+      <li><a href="http://localhost:1313/tags/llm/">LLM</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">ap.grad</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
