@@ -1,0 +1,73 @@
+<svg class="gene-diagram" viewBox="0 0 1000 385" role="img" aria-label="The cell cycle as a left-to-right flow: G1 (grow), then a G1/S checkpoint, then S (copy DNA), then G2 (check and prepare), then a G2/M checkpoint, then M (divide), producing two identical daughter cells that re-enter the cycle. A checkpoint that finds damage beyond repair sends the cell to apoptosis, guarded by p53." style="width:100%;max-width:980px;height:auto;display:block;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <style>
+    .gene-diagram{
+      --heading:#1a1a1a; --label:#555; --boxtext:#1f2d3d;
+      --blue-f:#e8f0fe; --blue-s:#6b9be8;
+      --green-f:#e6f4ea; --green-s:#5cb87a;
+      --purple-f:#ece9fb; --purple-s:#9184de;
+      --red-f:#fdecea; --red-s:#d0654a;
+      --rib-f:#eceff1; --rib-s:#8b97a3;
+      --chk-f:#fff3e0; --chk-s:#e0a030;
+      --arrow:#b0b0b0;
+    }
+    :root[data-theme="dark"] .gene-diagram{
+      --heading:#ececec; --label:#b3b3b3; --boxtext:#dbe6f5;
+      --blue-f:#24425f; --blue-s:#6b9be8;
+      --green-f:#234d34; --green-s:#5cb87a;
+      --purple-f:#33305c; --purple-s:#9184de;
+      --red-f:#4a2b25; --red-s:#e08767;
+      --rib-f:#333b43; --rib-s:#9aa7b2;
+      --chk-f:#4a3a1a; --chk-s:#e0a030;
+      --arrow:#777777;
+    }
+    @media (prefers-color-scheme: dark){
+      :root[data-theme="auto"] .gene-diagram{
+        --heading:#ececec; --label:#b3b3b3; --boxtext:#dbe6f5;
+        --blue-f:#24425f; --blue-s:#6b9be8;
+        --green-f:#234d34; --green-s:#5cb87a;
+        --purple-f:#33305c; --purple-s:#9184de;
+        --red-f:#4a2b25; --red-s:#e08767;
+        --rib-f:#333b43; --rib-s:#9aa7b2;
+        --chk-f:#4a3a1a; --chk-s:#e0a030;
+        --arrow:#777777;
+      }
+    }
+    .gene-diagram text{font-size:16px;}
+    .gene-diagram .h{fill:var(--heading);font-size:20px;font-weight:700;}
+    .gene-diagram .sub{fill:var(--label);font-size:13px;opacity:0.85;}
+    .gene-diagram .l{fill:var(--label);}
+    .gene-diagram .ph{fill:var(--boxtext);font-size:22px;font-weight:700;}
+    .gene-diagram .blue{fill:var(--blue-f);stroke:var(--blue-s);stroke-width:1.5;}
+    .gene-diagram .green{fill:var(--green-f);stroke:var(--green-s);stroke-width:1.5;}
+    .gene-diagram .purple{fill:var(--purple-f);stroke:var(--purple-s);stroke-width:1.5;}
+    .gene-diagram .red{fill:var(--red-f);stroke:var(--red-s);stroke-width:1.5;}
+    .gene-diagram .rib{fill:var(--rib-f);stroke:var(--rib-s);stroke-width:1.5;}
+    .gene-diagram .chk{fill:var(--chk-f);stroke:var(--chk-s);stroke-width:1.5;}
+    .gene-diagram .apop{stroke:var(--red-s);stroke-width:2;fill:none;stroke-dasharray:5 4;}
+    .gene-diagram .arrow{stroke:var(--arrow);stroke-width:1.5;fill:none;}
+    .gene-diagram .ahead{fill:var(--arrow);}
+  </style>
+  <text class="h" x="40" y="38">The cell cycle</text>
+  <text class="sub" x="40" y="58">one cell grows, copies its DNA, checks it, and divides in two</text>
+  <rect class="blue" x="44" y="100" width="128" height="66" rx="10"/><text class="ph" x="108" y="126" text-anchor="middle" dominant-baseline="middle">G1</text><text class="sub" x="108" y="150" text-anchor="middle">grow</text>
+  <rect class="green" x="250" y="100" width="128" height="66" rx="10"/><text class="ph" x="314" y="126" text-anchor="middle" dominant-baseline="middle">S</text><text class="sub" x="314" y="150" text-anchor="middle">copy DNA</text>
+  <rect class="purple" x="456" y="100" width="128" height="66" rx="10"/><text class="ph" x="520" y="126" text-anchor="middle" dominant-baseline="middle">G2</text><text class="sub" x="520" y="150" text-anchor="middle">check &amp; prep</text>
+  <rect class="red" x="662" y="100" width="128" height="66" rx="10"/><text class="ph" x="726" y="126" text-anchor="middle" dominant-baseline="middle">M</text><text class="sub" x="726" y="150" text-anchor="middle">divide</text>
+  <line class="arrow" x1="172" y1="133" x2="241" y2="133"/><polygon class="ahead" points="241,128 241,138 250,133"/>
+  <rect class="chk" x="204.5" y="126.5" width="13" height="13" rx="2" transform="rotate(45 211 133)"/><text class="sub" x="211" y="116" text-anchor="middle">G1/S</text>
+  <line class="arrow" x1="378" y1="133" x2="449" y2="133"/><polygon class="ahead" points="449,128 449,138 458,133"/>
+  <line class="arrow" x1="584" y1="133" x2="653" y2="133"/><polygon class="ahead" points="653,128 653,138 662,133"/>
+  <rect class="chk" x="616.5" y="126.5" width="13" height="13" rx="2" transform="rotate(45 623 133)"/><text class="sub" x="623" y="116" text-anchor="middle">G2/M</text>
+  <line class="arrow" x1="790" y1="133" x2="834" y2="133"/><polygon class="ahead" points="834,128 834,138 843,133"/>
+  <text class="l" x="888" y="92" text-anchor="middle">two daughter cells</text>
+  <circle class="rib" cx="860" cy="133" r="24"/><circle class="blue" cx="860" cy="133" r="10"/>
+  <circle class="rib" cx="916" cy="133" r="24"/><circle class="blue" cx="916" cy="133" r="10"/>
+  <line class="arrow" x1="623" y1="148" x2="623" y2="251"/><polygon class="ahead" points="618,251 628,251 623,260"/>
+  <text class="sub" x="634" y="192">beyond repair</text>
+  <circle class="apop" cx="623" cy="284" r="22"/>
+  <circle class="red" cx="600" cy="266" r="4"/><circle class="red" cx="645" cy="268" r="5"/><circle class="red" cx="641" cy="304" r="4"/><circle class="red" cx="602" cy="305" r="4"/>
+  <text class="l" x="654" y="278" dominant-baseline="middle">apoptosis</text>
+  <text class="sub" x="654" y="298" dominant-baseline="middle">p53 orders self-destruct</text>
+  <path class="arrow" d="M888,158 L888,346 Q888,352 882,352 L114,352 Q108,352 108,346 L108,167"/><polygon class="ahead" points="103,167 113,167 108,158"/>
+  <text class="sub" x="380" y="344" text-anchor="middle">daughter cells re-enter the cycle — one turn ≈ 24 h</text>
+</svg>
