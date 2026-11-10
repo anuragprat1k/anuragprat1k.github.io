@@ -19,7 +19,7 @@
  .arch-svg .v-label { fill: #5b21b6; }
  .arch-svg .v-sub { fill: #6d28d9; }
  .arch-svg .block-border { fill: none; stroke: #a1a1aa; stroke-dasharray: 4 3; }
- .arch-svg .badge-bg { fill: var(--theme); }
+ .arch-svg .badge-bg { fill: var(--bg); }
  :root[data-theme="dark"] .arch-svg text { fill: #f4f4f5; }
  :root[data-theme="dark"] .arch-svg .sub { fill: #a1a1aa; }
  :root[data-theme="dark"] .arch-svg .line { stroke: #a1a1aa; }
@@ -36,6 +36,24 @@
  :root[data-theme="dark"] .arch-svg .v-label { fill: #ddd6fe; }
  :root[data-theme="dark"] .arch-svg .v-sub { fill: #c4b5fd; }
  :root[data-theme="dark"] .arch-svg .block-border { stroke: #a1a1aa; }
+ @media (prefers-color-scheme: dark) {
+ :root:not([data-theme="light"]) .arch-svg text { fill: #f4f4f5; }
+ :root:not([data-theme="light"]) .arch-svg .sub { fill: #a1a1aa; }
+ :root:not([data-theme="light"]) .arch-svg .line { stroke: #a1a1aa; }
+ :root:not([data-theme="light"]) .arch-svg .n-fill { fill: #27272a; }
+ :root:not([data-theme="light"]) .arch-svg .n-stroke { stroke: #71717a; }
+ :root:not([data-theme="light"]) .arch-svg .n-label { fill: #f4f4f5; }
+ :root:not([data-theme="light"]) .arch-svg .n-sub { fill: #a1a1aa; }
+ :root:not([data-theme="light"]) .arch-svg .g-fill { fill: #064e3b; }
+ :root:not([data-theme="light"]) .arch-svg .g-stroke { stroke: #10b981; }
+ :root:not([data-theme="light"]) .arch-svg .g-label { fill: #a7f3d0; }
+ :root:not([data-theme="light"]) .arch-svg .g-sub { fill: #6ee7b7; }
+ :root:not([data-theme="light"]) .arch-svg .v-fill { fill: #4c1d95; }
+ :root:not([data-theme="light"]) .arch-svg .v-stroke { stroke: #8b5cf6; }
+ :root:not([data-theme="light"]) .arch-svg .v-label { fill: #ddd6fe; }
+ :root:not([data-theme="light"]) .arch-svg .v-sub { fill: #c4b5fd; }
+ :root:not([data-theme="light"]) .arch-svg .block-border { stroke: #a1a1aa; }
+ }
  &lt;/style&gt;
  &lt;defs&gt;
  &lt;marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"&gt;
